@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Image Gallery</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#fafafa;color:#122}
+    .wrap{max-width:1000px;margin:2rem auto;padding:0 1rem}
+    h1{text-align:center}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .grid img{width:100%;height:180px;object-fit:cover;border-radius:8px;cursor:pointer;display:block}
+    @media(max-width:800px){ .grid{grid-template-columns:repeat(2,1fr)} }
+    @media(max-width:480px){ .grid{grid-template-columns:1fr} .grid img{height:260px} }
+
+    /* lightbox */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;padding:1rem}
+    .lightbox img{max-width:90%;max-height:80%;border-radius:8px;box-shadow:0 14px 40px rgba(0,0,0,.6)}
+    .lightbox.show{display:flex}
+    .close{position:absolute;top:18px;right:18px;color:#fff;font-size:1.6rem;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Gallery</h1>
+    <div class="grid" id="gallery">
+      <!-- Replace src with your images or unsplash links -->
+      <img src="https://picsum.photos/id/1015/800/600" alt="Image 1" />
+      <img src="https://picsum.photos/id/1016/800/600" alt="Image 2" />
+      <img src="https://picsum.photos/id/1025/800/600" alt="Image 3" />
+      <img src="https://picsum.photos/id/1035/800/600" alt="Image 4" />
+      <img src="https://picsum.photos/id/1043/800/600" alt="Image 5" />
+      <img src="https://picsum.photos/id/1050/800/600" alt="Image 6" />
+    </div>
+  </div>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <span class="close" id="lbClose" title="Close">&times;</span>
+    <img id="lbImage" alt="Expanded view" />
+  </div>
+
+  <script>
+    const gallery = document.getElementById('gallery');
+    const lightbox = document.getElementById('lightbox');
+    const lbImage = document.getElementById('lbImage');
+    const lbClose = document.getElementById('lbClose');
+
+    gallery.addEventListener('click', e => {
+      if(e.target.tagName === 'IMG'){
+        lbImage.src = e.target.src;
+        lbImage.alt = e.target.alt;
+        lightbox.classList.add('show');
+        lightbox.setAttribute('aria-hidden','false');
+      }
+    });
+
+    function closeLB(){
+      lightbox.classList.remove('show');
+      lightbox.setAttribute('aria-hidden','true');
+      lbImage.src = '';
+    }
+
+    lbClose.addEventListener('click', closeLB);
+    lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLB(); });
+    document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeLB(); });
+  </script>
+</body>
+</html>
